@@ -1,5 +1,7 @@
 import sys
 
+from flask_cors import CORS
+
 from main.application import create_app
 from main.config import config_by_name
 from .logger.logger import Logger
@@ -21,5 +23,7 @@ app = create_app(
 app.app_context().push()
 
 appLogger = Logger(app=app)
+
+CORS(app)
 
 from .controllers import *

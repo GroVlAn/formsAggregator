@@ -1,6 +1,7 @@
 class Config:
     DEBUG = False
     HOST = 'localhost'
+    CORS_HEADER = 'Content-Type'
 
 
 class DevelopmentConfig(Config):
