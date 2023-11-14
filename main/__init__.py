@@ -2,6 +2,7 @@ import sys
 
 from main.application import create_app
 from main.config import config_by_name
+from .logger.logger import Logger
 
 args = sys.argv
 mode = 'dev'
@@ -18,5 +19,7 @@ app = create_app(
     conf=conf
 )
 app.app_context().push()
+
+appLogger = Logger(app=app)
 
 from .controllers import *
