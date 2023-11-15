@@ -7,32 +7,31 @@ services:
     ports:
       - "4050:4050"
     networks:
-      - mongo
+      - mongo_form_aggregator
 
   db_forms_aggregator:
     container_name: "forms-aggregator-db"
-    image: mongo
+    image: mongo:latest
     volumes:
-      - ./database/mongo:/data/db
+      - ./database/db_forms_aggregator:/data/db
     ports:
-      - "5040:27017"
+      - "27017:27017"
     restart: unless-stopped
     networks:
-      - mongo
+      - mongo_form_aggregator
 
-  mongo_express:
-    container_name: "forms-aggregator-mongo-express"
-    image: mongo-express
+  forms_aggregator_mongo_express:
+    container_name: "forms_aggregator-mongo-express"
+    image: mongo-express:latest
     environment:
       ME_CONFIG_MONGODB_SERVER: "db_forms_aggregator"
-      ME_CONFIG_BASICAUTH_USERNAME: "root"
+      ME_CONFIG_BASICAUTH_USERNAME: ${MONGO_ROOT_USER}
       ME_CONFIG_BASICAUTH_PASSWORD: ${DB_PASSWORD}
-      ME_CONFIG_MONGODB_PORT: "5040"
     ports:
-      - "8080:8080"
+      - "8081:8081"
     restart: unless-stopped
     networks:
-      - mongo
+      - mongo_form_aggregator
     depends_on:
       - db_forms_aggregator
 
@@ -41,5 +40,5 @@ volumes:
 
 
 networks:
-  mongo:
+  mongo_form_aggregator:
     driver: bridge
