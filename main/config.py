@@ -1,6 +1,6 @@
 class Config:
     DEBUG = False
-    HOST = 'localhost'
+    HOST = '0.0.0.0'
     CORS_HEADER = 'Content-Type'
 
 
