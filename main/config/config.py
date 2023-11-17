@@ -21,3 +21,6 @@ config_by_name = dict(
     dev=DevelopmentConfig,
     prod=ProductionConfig
 )
+
+NAME_DATABASE = 'forms_aggregator_db'
+FORM_DOCUMENT = 'form'

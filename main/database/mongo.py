@@ -6,3 +6,4 @@ def create_mongo(host: str, port: int) -> pymongo.MongoClient:
 
     return client
 
+

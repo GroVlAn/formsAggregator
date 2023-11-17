@@ -1,6 +1,6 @@
 import logging
 
-from main import app, conf
+from main import conf, app
 
 
 def run():

@@ -27,8 +27,18 @@ class Logger:
     self.app: Flask - Flask application
     """
 
-    def __init__(self, app: Flask):
-        self.app = app
+    _instance = None
+    _app: Flask
+
+    def __new__(cls, *args, **kwargs):
+        if cls._instance is None:
+            cls._instance = super(Logger, cls).__new__(cls, *args, **kwargs)
+
+        return cls._instance
+
+    @classmethod
+    def set_app(cls, app: Flask):
+        cls._app = app
 
     @staticmethod
     def _make_text(*args: List[any]) -> str:
@@ -41,29 +51,32 @@ class Logger:
         current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         return f'{current_time}: ' + ''.join([f'{_arg_to_string(arg)}\t' for arg in args])
 
-    def info(self, *args: List[any]):
+    @classmethod
+    def info(cls, *args: List[any]):
         """
         print log type INFO
         :param args: List[any]
         :return: None
         """
 
-        self.app.logger.info(self._make_text(*args))
+        cls._app.logger.info(cls._make_text(*args))
 
-    def debug(self, *args: List[any]):
+    @classmethod
+    def debug(cls, *args: List[any]):
         """
         print log type DEBUG
         :param args: List[any]
         :return: None
         """
 
-        self.app.logger.debug(self._make_text(*args))
+        cls._app.logger.debug(cls._make_text(*args))
 
-    def warning(self, *args: List[any]):
+    @classmethod
+    def warning(cls, *args: List[any]):
         """
         print log type WARNING
         :param args: List[any]
         :return: None
         """
 
-        self.app.logger.warning(self._make_text(*args))
+        cls._app.logger.warning(cls._make_text(*args))

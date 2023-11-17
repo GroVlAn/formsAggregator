@@ -1,5 +1,9 @@
-from main.controllers.main import main
+from typing import Tuple
 
-__ALL__ = [
-    main
-]
+from main.controllers.forms import forms_print
+from main.controllers.main import main_print
+
+bluePrints: Tuple = (
+    main_print,
+    forms_print
+)

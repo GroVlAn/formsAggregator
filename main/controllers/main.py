@@ -1,13 +1,12 @@
-from main import app, appLogger, db
+from flask import Blueprint
+
+from main.logger import appLogger
+
+main_print = Blueprint('main_api', __name__)
 
 
-@app.route('/')
+@main_print.route('/')
 def main():
     appLogger.info('/', 'get', 'main')
-    form = db.form
-    form1 = {
-        "name": "name1",
-        "type": "type1"
-    }
-    form.insert_one(form1)
+
     return 'hello'
