@@ -18,3 +18,6 @@ run: dc-build dc-run
 
 test-dev:
 	docker exec forms-aggregator-dev pytest
+
+test:
+	docker exec forms-aggregator pytest
