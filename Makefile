@@ -15,3 +15,6 @@ dc-run:
 run-dev: dc-build-dev dc-run-dev
 
 run: dc-build dc-run
+
+test-dev:
+	docker exec forms-aggregator-dev pytest

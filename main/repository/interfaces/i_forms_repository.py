@@ -8,7 +8,7 @@ class CreatorForm(ABC):
 
     @classmethod
     @abstractmethod
-    def create_form(cls, form: Form) -> int:
+    def create_form(cls, form: Form) -> str:
         ...
 
 

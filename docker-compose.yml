@@ -4,6 +4,8 @@ services:
   forms_aggregator:
     container_name: "forms-aggregator"
     build: .
+    command:
+      - pytest
     ports:
       - "4050:4050"
     networks:

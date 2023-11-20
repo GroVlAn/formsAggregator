@@ -18,6 +18,8 @@ services:
     ports:
       - "27017:27017"
     restart: unless-stopped
+    expose:
+      - 27017
     networks:
       - mongo_form_aggregator_dev
 

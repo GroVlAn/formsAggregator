@@ -2,8 +2,9 @@ import json
 
 from flask import request, abort, Response, Blueprint
 
+from main import db
+from main.config.config import FORM_DOCUMENT
 from main.logger import appLogger
-from main.database import db
 from main.models.field import Field
 from main.models.form import Form
 from main.repository.forms_repository import FormsMongoRepository
@@ -11,9 +12,8 @@ from main.services.forms_service import FormsService
 
 forms_print = Blueprint('forms_api', __name__)
 
-forms_repository = FormsMongoRepository()
+forms_repository = FormsMongoRepository(db[FORM_DOCUMENT])
 
-forms_repository.set_db(db)
 forms_service = FormsService(repos=forms_repository)
 
 EXAMPLE_REQUEST = {
@@ -39,7 +39,7 @@ def get_form():
 
         form = forms_service.find_forms(fields=fields)
 
-        if form is not None:
+        if form:
             max_len_form = max(form, key=len, default={})
             appLogger.info('find forms', max_len_form)
             return Response(max_len_form['name'], status=200, mimetype='application/json')
@@ -61,8 +61,11 @@ def create_form():
         if len(request.json) < 2:
             return Response("form must have more 1 field", status=400, mimetype='application/json')
 
+        name = request.json['name']
+        del request.json['name']
+
         fields = [Field(name=field_name, type=field_type) for field_name, field_type in request.json.items()]
-        form = Form(name=request.json['name'], fields=fields)
+        form = Form(name=name, fields=fields)
         form_id = forms_service.create_form(form=form)
 
         return Response(f'{form_id}', status=201, mimetype='application/json')

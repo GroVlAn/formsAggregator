@@ -1,9 +1,29 @@
-from main.app.application import create_app
-from .config import conf
-from .config.config import config_by_name
-from .database.mongo import create_mongo
-from .logger import appLogger
-from .logger.logger import Logger
+import sys
 
-app = create_app(conf=conf)
-appLogger.set_app(app=app)
+from main.app.application import FormsApplication
+from main.config.config import NAME_DATABASE, config_by_name
+from main.database.mongo import create_mongo
+from main.logger import Logger
+
+args = sys.argv
+mode = 'dev'
+
+if '--prod' in args:
+    mode = 'prod'
+
+if '--dev' in args:
+    mode = 'dev'
+
+conf = config_by_name[mode]
+
+client = create_mongo(conf.MONGO_HOST, conf.MONGO_PORT)
+db = client[NAME_DATABASE]
+
+application = FormsApplication()
+application.set_config()
+
+application.create_app()
+logger = Logger()
+logger.set_app(application.get_app())
+
+

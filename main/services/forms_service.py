@@ -15,8 +15,17 @@ class FormsService(FormsServicer):
     :param repos: ReposForms - forms repository
     """
 
-    def __init__(self, repos: ReposForms):
-        self.repos = repos
+    _instance = None
+    _repos: ReposForms = None
+
+    def __new__(cls, repos: ReposForms, *args, **kwargs):
+
+        if cls._instance is None:
+            cls._instance = super(FormsService, cls).__new__(cls, *args, **kwargs)
+
+        cls._repos = repos
+
+        return cls._instance
 
     @staticmethod
     def create_fields_list(init_data: Dict[str, str]) -> List[Field]:
@@ -31,7 +40,8 @@ class FormsService(FormsServicer):
 
         return fields
 
-    def find_forms(self, fields: List[Field]) -> Optional[List[Dict[str, str]]]:
+    @classmethod
+    def find_forms(cls, fields: List[Field]) -> Optional[List[Dict[str, str]]]:
         """
         method for get all forms by list fields
         :param fields: List[Field]
@@ -39,21 +49,22 @@ class FormsService(FormsServicer):
         """
 
         all_fields = {field.name: EFieldTypes(field.type).value for field in fields}
-        form = self.repos.get_all(all_fields=all_fields)
+        form = cls._repos.get_all(all_fields=all_fields)
 
         if len(form) == 0:
             return None
 
-        return [form for form in form if self._in_fields(form, all_fields)]
+        return [form for form in form if cls._in_fields(form, all_fields)]
 
-    def create_form(self, form: Form) -> int:
+    @classmethod
+    def create_form(cls, form: Form) -> str:
         """
         method for create new form
         :param form:
         :return:
         """
 
-        id_form = self.repos.create_form(form)
+        id_form = cls._repos.create_form(form)
         appLogger.info('create_form', 'form:', form.to_dict())
 
         return id_form
